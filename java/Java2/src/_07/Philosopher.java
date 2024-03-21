@@ -65,4 +65,3 @@ class Philo implements Runnable {
         }
     }
 }
-

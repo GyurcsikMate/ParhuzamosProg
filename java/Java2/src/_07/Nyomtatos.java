@@ -1,0 +1,40 @@
+package _07;
+import java.util.concurrent.Semaphore;
+
+public class Nyomtatos{
+    public static final int TASK_NUMBER = 20;
+    public static void main(String[] args) {
+        Semaphore Szemi = new Semaphore(2);
+        NyomtatasFeladat[] feladatok = new NyomtatasFeladat[TASK_NUMBER];
+        for (int i = 0; i < TASK_NUMBER; i++) {
+            feladatok[i] = new NyomtatasFeladat("Feladat " + (i + 1), Szemi);
+            new Thread(feladatok[i]).start();
+        }
+    }
+}
+
+class NyomtatasFeladat implements Runnable {
+
+    private Semaphore Szemi;
+    private String name;
+
+    public NyomtatasFeladat(String name, Semaphore Szemi) {
+        this.name = name;
+        this.Szemi = Szemi;
+    }
+    @Override
+    public void run() {
+        try {
+            Szemi.acquire();
+            Szemi.acquire();
+            System.out.println(name + " has started a nyomtatas job");
+            Thread.sleep((long) (Math.random() * 1000));
+            System.out.println(name + " has finished a nyomtatas job.");
+            Szemi.release();
+            Szemi.release();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
